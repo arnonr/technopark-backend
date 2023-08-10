@@ -1,71 +1,186 @@
 <template>
-    <section class="portfolio__area pt-40 pb-40">
-      <div class="container" v-if="items.length != 0">
-        <div class="row">
-          <div class="col-xxl-12">
-            <div class="portfolio__masonary-btn-2 text-center mb-50">
-              <div
-                class="masonary-menu filter-button-group"
-                v-if="newsType.length != 0"
-              >
-                <button
-                  v-for="(nt, i) in newsType"
-                  :key="i"
-                  @click="onChangeNewsType(nt.id, nt.category)"
-                  :class="`${nt.category === activeCategory ? 'active' : ''}`"
-                >
-                  {{ nt.name }}
-                </button>
+  <section class="portfolio__area pt-40 pb-40">
+    <div class="container">
+      <div class="row">
+        <div class="col-xxl-12 mb-20">
+          <!-- Search -->
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">ค้นหา</h5>
+              <hr />
+              <div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="">
+                      <label for="">หัวข้อข่าว</label>
+                      <input
+                        class="form-control"
+                        v-model="search.title"
+                        name="title"
+                        type="text"
+                        placeholder="หัวข้อข่าว"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="">
+                      <label for="">ประเภท</label>
+                      <v-select
+                        label="title"
+                        :options="selectOptions.newsTypes"
+                        v-model="search.news_type_id"
+                        class="form-control"
+                        :clearable="true"
+                      ></v-select>
+                    </div>
+                  </div>
+                  <div class="col-md-4">
+                    <label for="">จำนวนรายการ/หน้า</label>
+                    <v-select
+                      label="title"
+                      :options="selectOptions.perPage"
+                      v-model="perPage"
+                      class="form-control"
+                    ></v-select>
+                  </div>
+
+                  <div class="col-md-12 mt-20">
+                    <div class="contact__btn-2">
+                      <button class="btn btn-danger" @click="resetSearch">
+                        ล้าง
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
+              <!-- <a href="#" class="btn btn-primary">Go somewhere</a> -->
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="row">
-          <div class="col-lg-12">
-            <div class="row">
-              <div class="col-xl-12">
-                <div class="blog__list-item-wrapper">
-                  <NewsListItem
-                    v-for="(item, i) in items"
-                    :key="i"
-                    :item="item"
-                  />
-                </div>
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-xl-12">
+              <div class="text-end mb-20">
+                <NuxtLink to="/news/add"  class="btn btn-success">
+                    <i class="fa fa-plus" />
+                    เพิ่มข่าว
+                </NuxtLink>
               </div>
-              <div class="col-xxl-12">
-                <div class="tp-pagination mt-30">
-                  <blog-pagination
-                    :totalPage="totalPage"
-                    :currentPage="currentPage"
-                    @update:currentPage="currentPage = $event"
-                  />
-                </div>
+              <table
+                class="table table-bordered table-striped table-list"
+                v-if="items.length != 0"
+              >
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">หัวข้อข่าว</th>
+                    <th scope="col">ประเภท</th>
+                    <th scope="col">วันที่ลงข่าว</th>
+                    <th scope="col">สถานะ</th>
+                    <th scope="col">จัดการ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(it, index) in items" :key="index">
+                    <th scope="row">
+                      {{
+                        currentPage != 1
+                          ? index + 1 + (currentPage - 1) * perPage.value
+                          : index + 1
+                      }}
+                    </th>
+                    <td>{{ it.title }}</td>
+                    <td class="text-center">{{ it.news_type.name }}</td>
+                    <td class="text-center">
+                      {{
+                        dayjs(it.created_news).locale("th").format("DD MMM BB")
+                      }}
+                    </td>
+                    <td class="text-center">
+                      <span
+                        :class="
+                          'badge rounded-pill bg-' +
+                          showPublish[it.is_publish].color
+                        "
+                        >{{ showPublish[it.is_publish].text }}</span
+                      >
+                    </td>
+                    <td class="text-center">
+                      <NuxtLink :to="`/news/${it.id}`">
+                        <button class="btn btn-primary">
+                          <i class="fa fa-edit" />
+                        </button>
+                      </NuxtLink>
+                      <NuxtLink
+                        target="_blank"
+                        :href="`http://technopark.kmutnb.ac.th/news/${it.id}`"
+                      >
+                        <button class="btn btn-warning ml-10">
+                          <i class="fa fa-eye" />
+                        </button>
+                      </NuxtLink>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-xxl-12" v-if="items.length != 0">
+              <div class="tp-pagination mt-30">
+                <blog-pagination
+                  :totalPage="totalPage"
+                  :currentPage="currentPage"
+                  @update:currentPage="currentPage = $event"
+                />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 </template>
 
 <script setup>
 // Import
-import NewsListItem from "~/components/news/NewsListItem.vue";
 import BlogPagination from "~/components/common/pagination/BlogPagination.vue";
+import dayjs from "dayjs";
+import "dayjs/locale/th";
+import buddhistEra from "dayjs/plugin/buddhistEra";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+dayjs.extend(buddhistEra);
 // Variable
-const route = useRoute();
+// const route = useRoute();
+// const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
 const items = ref([]);
-const perPage = ref(2);
+const perPage = ref({ title: "20", value: 20 });
 const currentPage = ref(1);
 const totalPage = ref(1);
 const totalItems = ref(0);
 const newsType = ref([]);
-const activeCategory = ref("news-all");
 const search = ref({
+  title: null,
   news_type_id: undefined,
   is_publish: 1,
+});
+
+const selectOptions = ref({
+  perPage: [
+    { title: "2", value: 2 },
+    { title: "20", value: 20 },
+    { title: "40", value: 40 },
+    { title: "60", value: 60 },
+  ],
+  orderBy: [{ title: "ลำดับ/level", value: "level" }],
+  order: [
+    { title: "น้อย -> มาก", value: "asc" },
+    { title: "มาก -> น้อย", value: "desc" },
+  ],
+  newsTypes: [],
 });
 
 // Function Fetch
@@ -76,27 +191,15 @@ const fetchNewsType = async () => {
     },
   })
     .then((res) => {
-      let d = res.data.map((e) => {
-        e.category = "news-" + e.name;
-        return e;
+      newsType.value = res.data;
+
+      selectOptions.value.newsTypes = res.data.map((e) => {
+        let d = {
+          title: e.name,
+          value: e.id,
+        };
+        return d;
       });
-
-      d.unshift({
-        id: null,
-        name: "ข่าวทั้งหมด",
-        category: "news-all",
-      });
-
-      newsType.value = d;
-
-      if (route.query.news_type_id) {
-        let nt = newsType.value.find((x) => {
-          return x.id == route.query.news_type_id;
-        });
-        onChangeNewsType(route.query.news_type_id, nt.category);
-      } else {
-        fetchItems();
-      }
     })
     .catch((error) => error.data);
 };
@@ -106,11 +209,10 @@ const fetchItems = async () => {
   await $fetch(`${runtimeConfig.public.apiBase}/news`, {
     params: {
       ...search.value,
-      news_type_id:
-        search.value.news_type_id == null
-          ? undefined
-          : search.value.news_type_id,
-      perPage: perPage.value,
+      news_type_id: search.value.news_type_id
+        ? search.value.news_type_id.value
+        : undefined,
+      perPage: perPage.value.value,
       currentPage: currentPage.value,
     },
   })
@@ -121,27 +223,32 @@ const fetchItems = async () => {
     })
     .catch((error) => error.data);
 };
-
-// Function Change
-const onChangeNewsType = async (id, category) => {
-  search.value.news_type_id = id;
-  await fetchItems();
-  activeCategory.value = category;
-  search.value.news_type_id = id;
-  //
-};
-
-onMounted(() => {});
+fetchItems();
 
 watchEffect(fetchItems);
+// Function Change
+onMounted(() => {});
 
 watchEffect(() => {
   if (currentPage.value > totalPage.value) currentPage.value = totalPage.value;
 });
 
-useHead({
-  title: "ข่าวอุทยานเทคโนโลยี มจพ.",
-});
+const showPublish = [
+  { text: "None", color: "secondary" },
+  { text: "Publish", color: "success" },
+];
+
+const resetSearch = () => {
+  search.value = {
+    title: null,
+    news_type_id: undefined,
+    is_publish: 1,
+  };
+};
 </script>
 
-<style scoped></style>
+<style scoped>
+th {
+  text-align: center;
+}
+</style>

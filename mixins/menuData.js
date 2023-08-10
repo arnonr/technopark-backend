@@ -25,14 +25,24 @@ export default {
         },
         {
           id: 2,
-          title: "หลักสูตร",
+          title: "ข่าว",
           //   megaMenu: true,
           hasDropdown: true,
           link: "#",
           submenus: [
             {
               title:
-                "เทคโนโลยีบัณฑิต เทคโนโลนียานยนต์สมัยใหม่และระบบอัติโนมัติ (NATT)",
+                "ข่าวประชาสัมพันธ์",
+              link: "/news",
+            },
+            {
+              title:
+                "ประเภทข่าว",
+              link: "/",
+            },
+            {
+              title:
+                "ข่าวประกาศ",
               link: "/",
             },
           ],
@@ -139,9 +149,9 @@ export default {
           id: 5,
           title: "เกี่ยวกับเรา",
           hasDropdown: true,
-        //   megaMenu: true,
+          //   megaMenu: true,
           link: "#",
-        //   pages: true,
+          //   pages: true,
           submenus: [
             { title: "ความเป็นมา", link: "/about/2" },
             { title: "ปรัชญา/ปณิธาน/วิสัยทัศน์", link: "/about/3" },
@@ -208,10 +218,10 @@ export default {
           hasDropdown: false,
           title: "ติดต่อเรา",
           link: "/about/1",
-        //   submenus: [
-        //     { title: "Contact Agency", link: "/contact" },
-        //     { title: "Contact: Classic", link: "/contact-2" },
-        //   ],
+          //   submenus: [
+          //     { title: "Contact Agency", link: "/contact" },
+          //     { title: "Contact: Classic", link: "/contact-2" },
+          //   ],
         },
       ],
     };

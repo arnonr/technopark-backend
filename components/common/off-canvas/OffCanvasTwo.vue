@@ -44,14 +44,14 @@
             </nuxt-link>
           </div>
         </div>
-        <div class="offcanvas__inner mb-80 d-none d-lg-block">
+        <div class="offcanvas__inner mb-80 d-none">
           <h4>We help to create visual strategies.</h4>
           <p>We want to hear from you. Let us know how we can help.</p>
           <img src="~/assets/img/shape/offcanvas-img-1.png" alt="" />
         </div>
 
         <div
-          class="mobile-menu fix mb-40 menu-counter mean-container d-lg-none"
+          class="mobile-menu fix mb-40 menu-counter mean-container"
         >
           <div class="mean-bar">
             <!-- MobileMenus start -->

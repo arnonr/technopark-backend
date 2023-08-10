@@ -21,11 +21,12 @@ export default defineNuxtConfig({
       {
         autoImports: ["defineStore", ["defineStore", "definePiniaStore"]],
       },
+      "nuxt-vue-select",
     ],
   ],
   app: {
     head: {
-      title: "Harry - Creative Agency & Portfolio Vue Nuxt 3 Template",
+      title: "อุทยานเทคโนโลยี มจพ.",
       link: [{ rel: "icon", type: "image/x-icon", href: "/favicon.ico" }],
       script: [
         {

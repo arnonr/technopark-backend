@@ -1,0 +1,289 @@
+<template>
+  <div>
+    <section class="breadcrumb__area include-bg pb-40 pt-30 grey-bg-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-xxl-12">
+            <div class="breadcrumb__content p-relative z-index-1">
+              <div class="breadcrumb__list">
+                <span>
+                  <NuxtLink
+                    :to="{
+                      path: '/',
+                    }"
+                  >
+                    หน้าหลัก
+                  </NuxtLink>
+                </span>
+                <span class="dvdr"
+                  ><i class="fa-solid fa-circle-small"></i
+                ></span>
+                <span>
+                  <NuxtLink href="/news"> รายการข่าว</NuxtLink>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--  -->
+    <section class="postbox__area pt-40 pb-120">
+      <div class="container">
+        <div class="row">
+          <div class="col-xxl-12">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">ค้นหา</h5>
+                <hr />
+                <div>
+                  <div class="row">
+                    <div class="col-md-12 mb-20">
+                      <div class="">
+                        <label for="">หัวข้อข่าว</label>
+                        <input
+                          class="form-control"
+                          v-model="item.title"
+                          name="title"
+                          type="text"
+                          placeholder="หัวข้อข่าว"
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-12 mb-20">
+                      <div class="">
+                        <label for="formFile" class="form-label"
+                          >รูปภาพปก</label
+                        >
+                        <input
+                          ref="file"
+                          class="form-control"
+                          type="file"
+                          id="formFile"
+                          @change="onFileChanged($event)"
+                        />
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-20">
+                      <div class="">
+                        <label for="">ประเภท</label>
+                        <v-select
+                          v-if="selectOptions.newsTypes.length != 0"
+                          label="title"
+                          :options="selectOptions.newsTypes"
+                          v-model="item.news_type_id"
+                          class="form-control"
+                          :clearable="true"
+                        ></v-select>
+                      </div>
+                    </div>
+
+                    <div class="col-md-12 mb-20">
+                      <div class="">
+                        <label for="">เนื้อหาข่าว</label>
+                        <div id="detail"></div>
+                      </div>
+                    </div>
+                    <div class="col-md-12 mt-20">
+                      <div class="contact__btn-2">
+                        <button class="btn btn-success" @click="onSubmit">
+                          Save
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>
+
+<script setup>
+import "froala-editor/css/froala_editor.pkgd.min.css";
+import FroalaEditor from "froala-editor/js/froala_editor.pkgd.min.js";
+import dayjs from "dayjs";
+import "dayjs/locale/th";
+import buddhistEra from "dayjs/plugin/buddhistEra";
+import Swal from "sweetalert2";
+import vSelect from "vue-select";
+import "vue-select/dist/vue-select.css";
+dayjs.extend(buddhistEra);
+
+const runtimeConfig = useRuntimeConfig();
+const route = useRoute();
+const router = useRouter();
+const selectOptions = ref({
+  newsTypes: [],
+});
+const item = ref({
+  title: "",
+  news_type_id: { title: "", value: null },
+  title: "",
+  detail: "",
+  created_news: dayjs(),
+  is_publish: 1,
+  news_file: null,
+});
+
+const file = ref(null);
+
+const initFroala = () => {
+  new FroalaEditor("#detail", {
+    height: 300,
+    // inlineMode: false,
+    pastePlain: true,
+    paragraphy: false,
+    quickInsertEnabled: false,
+    toolbarButtons: [
+      "undo",
+      "redo",
+      "fullscreen",
+      "|",
+      "fontSize",
+      "color",
+      "bold",
+      "italic",
+      "underline",
+      "inlineClass",
+      "|",
+      "paragraphFormat",
+      "align",
+      "outdent",
+      "indent",
+      "|",
+      "formatOL",
+      "formatUL",
+      "quote",
+      "-",
+      "insertLink",
+      "insertImage",
+      "insertVideo",
+      "insertFile",
+      "insertTable",
+      "|",
+      "fontAwesome",
+      "insertHR",
+      "selectAll",
+      "clearFormatting",
+      "|",
+      "print",
+      "getPDF",
+      "html",
+    ],
+    // Change buttons for XS screen.
+    toolbarButtonsXS: [
+      ["undo", "redo"],
+      ["bold", "italic", "underline"],
+    ],
+    placeholderText: "",
+    attribution: false,
+    key: "enter-your-license-key-here",
+    disableRightClick: true,
+
+    imageUploadURL: baseUrl + "/froala/image",
+    imageAllowedTypes: ["jpeg", "jpg", "png"],
+
+    fileUploadURL: baseUrl + "/froala/document",
+    videoUploadURL: baseUrl + "/froala/video",
+
+    // fileUpload: false,
+    // imageUpload: false,
+    imagePaste: false,
+    imagePasteProcess: false,
+    imageResize: true,
+    crossDomain: true,
+    events: {
+      keyup: function (inputEvent) {
+        item.value.detail = this.html.get();
+      },
+      click: function (clickEvent) {
+        item.value.detail = this.html.get();
+      },
+      "commands.after": function (cmd, param1, param2) {
+        item.value.detail = this.html.get();
+      },
+      "paste.after": function (pasteEvent) {
+        item.value.detail = this.html.get();
+      },
+    },
+  });
+};
+
+// Fetch
+const fetchNewsType = async () => {
+  await $fetch(`${runtimeConfig.public.apiBase}/news-type`, {
+    params: {
+      is_publish: 1,
+    },
+  })
+    .then((res) => {
+      selectOptions.value.newsTypes = res.data.map((e) => {
+        let d = {
+          title: e.name,
+          value: e.id,
+        };
+        return d;
+      });
+    })
+    .catch((error) => error.data);
+};
+fetchNewsType();
+
+// Method
+const onSubmit = () => {
+  isOverlay.value = true;
+  refForm.value?.validate().then(({ valid }) => {
+    if (valid) {
+      aboutUsStore
+        .addAboutUs({
+          ...item.value,
+          detail: item.value.detail.replace(
+            '<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>',
+            ""
+          ),
+          detail_en: item.value.detail_en.replace(
+            '<p data-f-id="pbf" style="text-align: center; font-size: 14px; margin-top: 30px; opacity: 0.65; font-family: sans-serif;">Powered by <a href="https://www.froala.com/wysiwyg-editor?pb=1" title="Froala Editor">Froala Editor</a></p>',
+            ""
+          ),
+        })
+        .then((response) => {
+          if (response.data.message == "success") {
+            localStorage.setItem("added", 1);
+            console.log("About Us Add Success");
+            nextTick(() => {
+              router.push({
+                path: "/admin/aboutUs/view/" + response.data.data.id,
+              });
+            });
+          } else {
+            isOverlay.value = false;
+            console.log("error");
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+    isOverlay.value = false;
+  });
+};
+
+const onFileChanged = ($event) => {
+  console.log("selected file", file.value.files);
+};
+
+onMounted(() => {
+  initFroala();
+});
+</script>
+
+<style scoped>
+.breadcrumb__title {
+  font-size: 50px;
+}
+</style>
