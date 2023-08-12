@@ -144,7 +144,7 @@
 </template>
 
 <script setup>
-// Import
+
 import BlogPagination from "~/components/common/pagination/BlogPagination.vue";
 import dayjs from "dayjs";
 import "dayjs/locale/th";
@@ -167,6 +167,7 @@ const search = ref({
   news_type_id: undefined,
   is_publish: 1,
 });
+
 
 const selectOptions = ref({
   perPage: [

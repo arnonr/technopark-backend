@@ -24,6 +24,9 @@ export default defineNuxtConfig({
       "nuxt-vue-select",
     ],
   ],
+  plugins: [
+    { src: "~/plugins/froala-editor.client.js", mode: "client" },
+  ],
   app: {
     head: {
       title: "อุทยานเทคโนโลยี มจพ.",

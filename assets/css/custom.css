@@ -27,3 +27,16 @@ textarea {
     padding: 0rem 0rem !important;
     /* padding-bottom: 10rem !important; */
 }
+
+
+.ProseMirror-focused:focus-visible {
+    outline: none !important;
+}
+
+.vs__dropdown-toggle {
+    border: none !important;
+}   
+
+.uppy-Dashboard-inner{
+    width: 100% !important;
+}
