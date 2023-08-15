@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     apiSecret: "",
     // Keys within public, will be also exposed to the client-side
     public: {
-      apiBase: "",
+      apiBase: "http://technopark.kmutnb.ac.th/api/v1",
     },
   },
   css: [
@@ -24,9 +24,7 @@ export default defineNuxtConfig({
       "nuxt-vue-select",
     ],
   ],
-  plugins: [
-    { src: "~/plugins/froala-editor.client.js", mode: "client" },
-  ],
+  plugins: [{ src: "~/plugins/froala-editor.client.js", mode: "client" }],
   app: {
     head: {
       title: "อุทยานเทคโนโลยี มจพ.",
