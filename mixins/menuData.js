@@ -43,7 +43,12 @@ export default {
             {
               title:
                 "ข่าวประกาศ",
-              link: "/",
+              link: "/annouce",
+            },
+            {
+              title:
+                "video",
+              link: "/video",
             },
           ],
           //   mega_menus: [
@@ -153,9 +158,9 @@ export default {
           link: "#",
           //   pages: true,
           submenus: [
-            { title: "ความเป็นมา", link: "/about/2" },
-            { title: "ปรัชญา/ปณิธาน/วิสัยทัศน์", link: "/about/3" },
-            { title: "โครงสร้างองค์กร", link: "/about/4" },
+            { title: "ความเป็นมา", link: "/about/edit/2" },
+            { title: "ปรัชญา/ปณิธาน/วิสัยทัศน์", link: "/about/edit/3" },
+            { title: "โครงสร้างองค์กร", link: "/about/edit/4" },
             { title: "บุคลากร", link: "/team" },
           ],
           //   mega_menus: [
@@ -217,11 +222,7 @@ export default {
           id: 6,
           hasDropdown: false,
           title: "ติดต่อเรา",
-          link: "/about/1",
-          //   submenus: [
-          //     { title: "Contact Agency", link: "/contact" },
-          //     { title: "Contact: Classic", link: "/contact-2" },
-          //   ],
+          link: "/about/edit/1",
         },
       ],
     };
