@@ -280,15 +280,17 @@ item.value.team_file = null;
 
 item.value.department_id = {
   title: res.value.data.department.name,
-  code: res.value.data.department_id,
+  value: res.value.data.department_id,
 };
 
 // Method
 const onSubmit = async () => {
+    console.log(item.value)
   let data = {
     ...item.value,
     team_file: file.value.files != null ? file.value.files[0] : [],
-    department_id: item.value.department_id.code,
+    department_id: item.value.department_id.value,
+    department: undefined,
   };
 
   var form_data = new FormData();
