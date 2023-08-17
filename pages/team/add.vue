@@ -276,7 +276,7 @@ const onSubmit = async () => {
         localStorage.setItem("added", 1);
         console.log("Team Add Success");
         router.push({
-          path: "/team/" + res.id,
+          path: "/team"
         });
       } else {
         console.log("error");
